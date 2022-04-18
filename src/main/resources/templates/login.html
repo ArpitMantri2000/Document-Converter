@@ -10,34 +10,25 @@
 <body>
 
 <div class="container">
-<div class = "row">
-<div class="col-md-6 offset-md-3">
-<h1>Welcome to Login Page</h1>
-
-<form th:action="@{/loginform}" method="post" class="col-md-6 offset-md-3">
-<div >
-<h4><label>E-mail</label></h4>
-<div >
-<input type ="text" name="email" required />
-</div>
-</div>
-
-<div >
-<h4><label>Password</label></h4>
-<div >
-<input type ="password"  name="password" required  minlength="6" maxlength="25" >
-</div>
-</div>
-
-<h4><input type="submit" value="submit"/></h4>
-</form>
-
-
-</div>
+	<div class = "row">
+		<div class="col-md-6 offset-md-3">
+		<h1>Welcome to Login Page</h1>
+			<form th:action="@{/loginform}" method="post" class="col-md-6 offset-md-3">
+				<div class="mb-3">
+					<label class="form-label">E-mail</label>
+					<input type ="text" class="form-control" placeholder="Enter email" name="email" required />
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Password</label>
+					<input type ="password" class="form-control" placeholder="Password" name="password" required  minlength="6" maxlength="25" >
+				</div>
+				<button class="btn btn-primary" type="submit">Submit</button>
+			</form>
+		</div>
+	</div>
 </div>
 
 <form method="get" th:action="@{/docs}"></form>
 </body>
 </html>
-
 

@@ -1,6 +1,8 @@
 package net.codejava.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.util.StreamUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,30 +41,35 @@ import net.codejava.model.User;
 public class DocController {
 
 	@Autowired
-	private DocStorageService docStorageService;
+	private DocRepository Repo;
 	
 	@Autowired
-	private DocRepository repo;
+	private DocStorageService docStorageService;
 	
+	//working
 	@GetMapping("/docs")
-	public String get(Model model)
+	public ResponseEntity<List<Doc>> get(Model model)
 	{
 		List<Doc> docs = docStorageService.getFiles();
 		model.addAttribute("docs" , docs);
-		return "doc";
+		return ResponseEntity.ok(docs);
 	}
-//uploading the file or files
+    
+	
+	
+	//uploading the file or files
 	@PostMapping("/uploadFiles")
 	public String uploadMultipleFiles(@RequestParam("files") MultipartFile[] files)
 	{
 		for(MultipartFile file: files)
 		{	
 			docStorageService.saveFile(file);
+
+			
 		}
-		return "redirect:/docs";
+		return  "redirect:/docs" ;
 	}
-	
-	
+
 }
 
 

@@ -10,46 +10,30 @@
 <body>
 
 <div class="container">
-<div class = "row">
-<div class="col-md-6 offset-md-3">
-<h1>User Registration</h1>
-<form th:action="@{/process_register}" method="post" th:object="${user}">
-<div>
-<div >
-<h4><label>E-mail</label></h4>
-<div >
-<input type ="email" th:field="*{email}" required />
-</div>
-</div>
-
-<div >
-<h4><label>Password</label></h4>
-<div >
-<input type ="password" th:field="*{password}" required  minlength="6" maxlength="25" />
-</div>
-</div>
-
-<div >
-<h4><label>First Name</label></h4>
-<div >
-<input type ="text" th:field="*{firstName}" required  minlength="1" maxlength="20"/>
-</div>
-</div>
-
-<div>
-<h4><label>Last Name</label></h4>
-<div >
-<input type ="text" th:field="*{lastName}" required minlength="1" maxlength="20"/>
-</div>
-</div>
-
-<div>
-<h4><button type ="submit"> Sign Up</button></h4>
-</div>
-</div>
-</form>
-</div>
-</div>
+	<div class = "row">
+		<div class="col-md-6 offset-md-3">
+			<h1>User Registration</h1>
+			<form th:action="@{/process_register}" method="post" th:object="${user}">
+				<div class="mb-3">
+					<label class="form-label">E-mail</label>
+					<input type ="email" class="form-control" placeholder="name@example.com" th:field="*{email}" required />
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Password</label>
+					<input type ="password" class="form-control" placeholder="Password" th:field="*{password}" required  minlength="6" maxlength="25" />
+				</div>
+				<div class="mb-3">
+					<label class="form-label">First Name</label>
+					<input type ="text" class="form-control" placeholder="First Name" th:field="*{firstName}" required  minlength="1" maxlength="20"/>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Last Name</label>
+					<input type ="text" class="form-control" placeholder="Last Name" th:field="*{lastName}" required minlength="1" maxlength="20"/>
+				</div>
+				<button class="btn btn-primary" type ="submit"> Sign Up!</button>
+			</form>
+		</div>
+	</div>
 </div>
 
 </body>

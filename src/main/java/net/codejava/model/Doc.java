@@ -1,22 +1,21 @@
 package net.codejava.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,18 +30,20 @@ public class Doc {
 	private Long id;
 
 	
-	private String document_uid = UUID.randomUUID().toString();
-	private String version_uid = UUID.randomUUID().toString();
+	private String documentuid = UUID.randomUUID().toString();
+	private String versionuid = UUID.randomUUID().toString();
 	
 	private String docName;
 	private String docType;
 	private String mimeType;
 	private Date createdDate = new Date(System.currentTimeMillis());
 	
-	@ManyToOne
-	@JoinColumn(name = "cid")
-	private User user;
-
+	@Column(insertable = false,updatable = false)
+	private Long user_id;
+	
+	@ManyToOne( cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+    private User user;
 	
 	public Doc()
 	{
@@ -54,9 +55,28 @@ public class Doc {
 		this.docName = docName;
 		this.docType = docType;
 		this.mimeType = mimeType;
-		
 	}
 	
+	public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -82,17 +102,21 @@ public class Doc {
 		this.docType = docType;
 	}
 
-	
-    public String getDocument_uid() {
-		return document_uid;
+	public String getDocumentuid() {
+		return documentuid;
 	}
 
-
-	public String getVersion_uid() {
-		return version_uid;
+	public void setDocumentuid(String documentuid) {
+		this.documentuid = documentuid;
 	}
 
-	
+	public String getVersionuid() {
+		return versionuid;
+	}
+
+	public void setVersionuid(String versionuid) {
+		this.versionuid = versionuid;
+	}
 
 	public Date getCreatedDate() {
 		return createdDate;
@@ -106,18 +130,10 @@ public class Doc {
 		this.mimeType = mimeType;
 	}
 	
-	
-	public User getUser() {
-		return user;
-	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
 
-	public void SaveDocument(@RequestParam("File") MultipartFile file) throws IOException 
-	{
-		String path = "E:\\UPLOADS\\"  + document_uid  + version_uid;
+	public void SaveDocument(@RequestParam("File") MultipartFile file) throws IOException {
+		String path = "E:\\UPLOADS\\"  + documentuid  + versionuid;
 	    File file1 = new File(path);
      	file1.mkdir();
 		String FILE_DIRECTORY = path+"\\";
@@ -128,51 +144,38 @@ public class Doc {
 		fos.close();
 	}
 
-	
-	public void ConvertToPdf()
-	{
-		{
-		
-		try
-		{
-			String docPath =  "E:\\UPLOADS\\"  + document_uid  + version_uid+"\\"+docName;
-			String pdfPath =  "E:\\UPLOADS\\"  + document_uid  + version_uid+"\\";
+	//command:soffice --headless --convert-to pdf 
+	public void ConvertToPdf() {
+		try {
+			String docPath =  "E:\\UPLOADS\\"  + documentuid  + versionuid+"\\"+docName;
+			String pdfPath =  "E:\\UPLOADS\\"  + documentuid  + versionuid+"\\";
 			String[] command = {"cmd.exe", "/c", "soffice --headless --convert-to pdf", docPath};
 			ProcessBuilder builder = new ProcessBuilder(command);
 			builder = builder.directory(new File(pdfPath));
 			Process p = builder.start();
-		}
-		catch(Exception e)
-		{
+			System.out.println("Document Conversion is done");
+		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-	    }
-		
+	
 	}
-	
-	public void ImageToPdf()
-	{
-		
+	//command :magick convert img filename pdf filename
+	public void ImageToPdf() {
 		String type = docType;
-	
 		String name = docName.substring(0,docName.lastIndexOf("."));
 		String output = name+".pdf";
-		try
-		{
-			String docPath =  "E:\\UPLOADS\\"  + document_uid  + version_uid+"\\"+docName;
-			String pdfPath =  "E:\\UPLOADS\\"  + document_uid  + version_uid+"\\";
-			String imgPath =  "E:\\UPLOADS\\"  + document_uid  + version_uid+"\\"+output;
-				String[] command = {"cmd.exe", "/c","magick convert",docPath, imgPath};
-                ProcessBuilder builder = new ProcessBuilder(command);
-				builder = builder.directory(new File(pdfPath));
-				Process p = builder.start();
-			}
-		catch(Exception e)
-		{
+		try {
+			String docPath =  "E:\\UPLOADS\\"  + documentuid  + versionuid+"\\"+docName;
+			String pdfPath =  "E:\\UPLOADS\\"  + documentuid  + versionuid+"\\";
+			String imgPath =  "E:\\UPLOADS\\"  + documentuid  + versionuid+"\\"+output;
+			String[] command = {"cmd.exe", "/c","magick convert",docPath, imgPath};
+            ProcessBuilder builder = new ProcessBuilder(command);
+			builder = builder.directory(new File(pdfPath));
+			Process p = builder.start();
+			System.out.println("Image Conversion is done");
+		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-
 	}
-	
 	
 }

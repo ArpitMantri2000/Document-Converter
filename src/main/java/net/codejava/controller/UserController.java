@@ -1,6 +1,8 @@
 package net.codejava.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,53 +18,42 @@ public class UserController {
 	@Autowired
 	private UserRepository repo;
 	
-
-		@GetMapping("")
-		public String viewHomePage()
-		{
-			return "index";
-		}
-		@GetMapping("/register")
-		public String showSignUpForm(Model model)
-		{
-			model.addAttribute("user",new User());
-			return "signup_form";
-		}
-		
-		@PostMapping("/process_register")
-		public String processRegistration(User user)
+	
+		//working
+	    @PostMapping("/process_register")
+		public ResponseEntity<User> processRegistration(User user)
 		{
 			repo.save(user);
-			return "register_success";
-		}
-
-		@GetMapping("/login")
-		public String getLoginPage()
-		{
-			return "login";
+			return ResponseEntity.ok(user);
 		}
 		
 
-		@PostMapping("/loginform")
-	public String verify(@RequestParam("email") String email,@RequestParam("password") String password)
-	{
-	   User u = null;
-	   try 
-	       {
+		// "Required request parameter 'email' for method parameter type String is not present",
+	    @PostMapping("/loginform")
+	    public ResponseEntity<Boolean> verify(@RequestParam("email") String email,@RequestParam("password") String password)
+	    {
+	       User u = null;
+	       try 
+	    {
 			u=repo.findByEmailAndPassword(email,password);
+			Long id = u.getUserid();
+			System.out.println(id);
 		}
-		catch(Exception e)
-			{
+		   catch(Exception e)
+		{
 			System.out.println("user not found");
 		}
 
-		if(u!=null)
+		   if(u!=null)
 		{
-		return "doc";	
+			 boolean  value = true;
+			 return new ResponseEntity<Boolean>(value, HttpStatus.OK);	
 		}
-	    else
+	       else
 	    {
-	    return "login";
+	    	   
+	    	   boolean  value = false;
+	    	   return new ResponseEntity<Boolean>(value, HttpStatus.NOT_ACCEPTABLE);	
 	    }	
 			
     }

@@ -1,7 +1,5 @@
 package net.codejava.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,8 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,32 +26,21 @@ public class User {
 	private String password;
 	private String firstName;
     private String LastName;
+    
+    
 
-    
-    @OneToMany(cascade = CascadeType.ALL,mappedBy ="user" )
-    private List<Doc> documents = new ArrayList<>();
-    
     public User()
     {
     	
     }
     
-	public User(Long id, String email, String password, String firstName, String lastName) {
-	this.userid = id;
+	public User( String email, String password, String firstName, String lastName) {
 	this.email = email;
 	this.password = password;
 	this.firstName = firstName;
-	LastName = lastName;
+	this.LastName = lastName;
 }
 
-
-	public List<Doc> getDocuments() {
-		return documents;
-	}
-
-	public void setDocuments(List<Doc> documents) {
-		this.documents = documents;
-	}
 
 	public Long getUserid() {
 		return userid;
@@ -94,6 +81,11 @@ public class User {
 	public void setLastName(String lastName) {
 		LastName = lastName;
 	}
+
+
+	
+	
+	
 	
 
 }
